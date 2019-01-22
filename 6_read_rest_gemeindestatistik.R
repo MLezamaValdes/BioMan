@@ -49,3 +49,4 @@ writeOGR(gem_he, dsn=paste0(datapath, "GemHe_Tourismus.shp"), driver="ESRI Shape
 # visualize with mapview
 mapview(gem_he, zcol="mean_betten_angebot", burst=F, label=ee$GEN_G, na.color="#e5e4e2",
                legend=T, layer.name="Bettenangebot")
+gem_he$GEN_K
