@@ -79,6 +79,7 @@ bev <- read.csv(list.files(path, pattern="_Bevoelkerung_2.csv", full.names = T),
                 sep=";", stringsAsFactors = F)
 # replace , with . and save as numeric
 for(i in seq(17)){
+  bev[,2+i] <- as.numeric(gsub(".", '', bev[,2+i], fixed = T))
   bev[,2+i] <- as.numeric(gsub(",", '.', bev[,2+i], fixed = T))
 }
 bev$AGS <- as.factor(paste0("06",bev$AGS)) # add 06 for Hessen to code
@@ -99,6 +100,7 @@ bes <- readOGR(paste0(main, "GemHe_Beschaeftigte.shp"))
 besclip <- intersect(bes, kreise)
 # replace , with . and save as numeric
 for(i in seq(6)){
+  besclip@data[,29+i] <- as.numeric(gsub(".", '', besclip@data[,29+i], fixed = T))
   besclip@data[,29+i] <- as.numeric(gsub(",", '.', besclip@data[,29+i], fixed = T))
 }
 besclip@data[,36:42] <- NULL
@@ -114,6 +116,7 @@ fln <- readOGR(paste0(main, "GemHe_Flaechennutzung.shp"))
 flnclip <- intersect(fln, kreise)
 # replace , with . and save as numeric
 for(i in seq(15)){
+  flnclip@data[,29+i] <- as.numeric(gsub(".", '', flnclip@data[,29+i], fixed = T))
   flnclip@data[,29+i] <- as.numeric(gsub(",", '.', flnclip@data[,29+i], fixed = T))
 }
 # which are smaller than smallest Gemeinde? 
@@ -127,6 +130,7 @@ lws <- readOGR(paste0(main, "GemHe_LWS.shp"))
 lwsclip <- intersect(lws, kreise)
 # replace , with . and save as numeric
 for(i in seq(31)){
+  lwsclip@data[,29+i] <- as.numeric(gsub(".", '', lwsclip@data[,29+i], fixed = T))
   lwsclip@data[,29+i] <- as.numeric(gsub(",", '.', lwsclip@data[,29+i], fixed = T))
 }
 # which are smaller than smallest Gemeinde? 
