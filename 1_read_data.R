@@ -19,7 +19,9 @@ newproj <- "+proj=utm +zone=32 +ellps=GRS80 +units=m +no_defs"
 # writeOGR(gem_he, dsn=paste0(datapath, "Gemeinden_Hessen.shp"), driver="ESRI Shapefile", 
 #          layer="Gemeinden_Hessen", overwrite=T)
 
-gem_he <- readOGR(paste0(datapath, "Gemeinden_Hessen.shp"))
+
+gem_he_path <- "C:/Users/mleza/Documents/Jobs/BioMan/Variablen/old/Hessen_shapes/"
+gem_he <- readOGR(paste0(gem_he_path, "Gemeinden_Hessen_clean.shp"))
 gem_henam <- gem_he@data # to see gemeinde names
 
 # CORINE HESSEN
@@ -33,16 +35,24 @@ writeRaster(corine_proj, paste0(datapath, "corine_hessen_proj.tif"), format="GTi
 
 
 # BEVÖLKERUNG
-# bev <- read.csv(list.files(datapath, pattern="Bevölkerung", full.names = T), 
-#                 sep=";", stringsAsFactors = F)
-# bev$AGS <- as.numeric(paste0("06",bev$AGS)) # add 06 for Hessen to code
-# 
-# # which position do codes have in two datasets? 
-# match(gem_he$AGS_G, bev$AGS) # works!!
-# gem_he@data <- merge(gem_he@data, bev, by.x="AGS_G", by.y="AGS")
-# writeOGR(gem_he, dsn=paste0(datapath, "GemHe_Bevölkerung.shp"), driver="ESRI Shapefile", 
-#          layer="GemHe_Bevölkerung", overwrite=T)
+path <- "C:/Users/mleza/Documents/Jobs/BioMan/Variablen/HessischeGemeindestatistik/"
+bev <- read.csv(list.files(path, pattern="_Bevoelkerung_2.csv", full.names = T),
+                sep=";", stringsAsFactors = F)
+# replace , with . and save as numeric
+for(i in seq(17)){
+  bev[,2+i] <- as.numeric(gsub(",", '.', bev[,2+i], fixed = T))
+}
+bev$AGS <- as.factor(paste0("06",bev$AGS)) # add 06 for Hessen to code
+# which position do codes have in two datasets?
+match(gem_he$AGS_G, bev$AGS) # works!!
+gem_he@data <- merge(gem_he@data, bev, by.x="AGS_G", by.y="AGS")
 
+#clip to mh
+bevclip <- intersect(gem_he, kreise)
+opp <- "C:/Users/mleza/Documents/Jobs/BioMan/Variablen/mein_GIS/final_GIS/"
+writeOGR(bevclip, dsn=paste0(opp, "GemHe_Bevoelkerung_mh.shp"), driver="ESRI Shapefile",
+         layer="GemHe_Bevoelkerung_mh", overwrite=T)
+str(bevclip@data)
 bev <- readOGR(paste0(datapath, "GemHe_Bevölkerung.shp"))
 
 # BESCHÄFTIGTE

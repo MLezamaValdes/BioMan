@@ -7,6 +7,7 @@ main <- "C:/Users/mleza/Documents/Jobs/BioMan/Variablen/"
 datapath <- "C:/Users/mleza/Documents/Jobs/BioMan/Variablen/mein_GIS/"
 newproj <- "+proj=utm +zone=32 +ellps=GRS80 +units=m +no_defs"
 
+gem_he_path <- "C:/Users/mleza/Documents/Jobs/BioMan/Variablen/old/Hessen_shapes/"
 
 # LANDWIRTSCHAFTLICH GENUTZTE FLÄCHE
 gem_he <- readOGR(paste0(datapath, "Gemeinden_Hessen_clean.shp"))
@@ -34,9 +35,13 @@ writeOGR(gem_he, dsn=paste0(datapath, "GemHe_Flaechennutzung.shp"), driver="ESRI
          layer="GemHe_Flaechennutzung", overwrite=T)
 
 # TOURISMUS
-gem_he <- readOGR(paste0(datapath, "Gemeinden_Hessen_clean.shp"))
+gem_he <- readOGR(paste0(gem_he_path, "Gemeinden_Hessen_clean.shp"))
 trm <- read.csv(list.files(paste0(main, "HessischeGemeindestatistik/"), pattern="HG_17_Tourismus.csv", full.names = T),
-                sep=";", stringsAsFactors = F)
+                sep=";", dec=",", stringsAsFactors = F)
+# replace , with . and save as numeric
+for(i in seq(4)){
+  trm[,2+i] <- as.numeric(gsub(",", '.', trm[,2+i], fixed = T))
+}
 trm$AGS <- as.factor(paste0("06",trm$AGS)) # add 06 for Hessen to code
 # which position do codes have in two datasets?
 match(gem_he$AGS_G, trm$AGS) # works!!
