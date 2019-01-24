@@ -20,9 +20,11 @@ df <- data.frame(f=1, name="relevant shapefiles")
 kreise_comp <- SpatialPolygonsDataFrame(kreise_comp, df)
 writeOGR(kreise, dsn=paste0(opp, "relevante_Kreise.shp"), driver="ESRI Shapefile",
          layer="relevante_Kreise", overwrite=T)
-kreise <- kreise_comp
+
 writeOGR(kreise_comp, dsn=paste0(opp, "Kreise_comp.shp"), driver="ESRI Shapefile",
          layer="Kreise_comp", overwrite=T)
+
+kreise <- readOGR(paste0("C:/Users/mleza/Documents/Jobs/BioMan/Variablen/mein_GIS/final_GIS/", "Kreise_comp.shp"))
 
 ## crop and mask corine
 corine <- raster(paste0(main, "corine_hessen_proj.tif"))
@@ -79,7 +81,7 @@ bev <- read.csv(list.files(path, pattern="_Bevoelkerung_2.csv", full.names = T),
                 sep=";", stringsAsFactors = F)
 # replace , with . and save as numeric
 for(i in seq(17)){
-  bev[,2+i] <- as.numeric(gsub(".", '', bev[,2+i], fixed = T))
+  bev[,2+i] <- gsub(".", '', bev[,2+i], fixed = T)
   bev[,2+i] <- as.numeric(gsub(",", '.', bev[,2+i], fixed = T))
 }
 bev$AGS <- as.factor(paste0("06",bev$AGS)) # add 06 for Hessen to code
@@ -100,7 +102,7 @@ bes <- readOGR(paste0(main, "GemHe_Beschaeftigte.shp"))
 besclip <- intersect(bes, kreise)
 # replace , with . and save as numeric
 for(i in seq(6)){
-  besclip@data[,29+i] <- as.numeric(gsub(".", '', besclip@data[,29+i], fixed = T))
+  besclip@data[,29+i] <- gsub(".", '', besclip@data[,29+i], fixed = T)
   besclip@data[,29+i] <- as.numeric(gsub(",", '.', besclip@data[,29+i], fixed = T))
 }
 besclip@data[,36:42] <- NULL
@@ -116,7 +118,7 @@ fln <- readOGR(paste0(main, "GemHe_Flaechennutzung.shp"))
 flnclip <- intersect(fln, kreise)
 # replace , with . and save as numeric
 for(i in seq(15)){
-  flnclip@data[,29+i] <- as.numeric(gsub(".", '', flnclip@data[,29+i], fixed = T))
+  flnclip@data[,29+i] <- gsub(".", '', flnclip@data[,29+i], fixed = T)
   flnclip@data[,29+i] <- as.numeric(gsub(",", '.', flnclip@data[,29+i], fixed = T))
 }
 # which are smaller than smallest Gemeinde? 
@@ -130,7 +132,7 @@ lws <- readOGR(paste0(main, "GemHe_LWS.shp"))
 lwsclip <- intersect(lws, kreise)
 # replace , with . and save as numeric
 for(i in seq(31)){
-  lwsclip@data[,29+i] <- as.numeric(gsub(".", '', lwsclip@data[,29+i], fixed = T))
+  lwsclip@data[,29+i] <- gsub(".", '', lwsclip@data[,29+i], fixed = T)
   lwsclip@data[,29+i] <- as.numeric(gsub(",", '.', lwsclip@data[,29+i], fixed = T))
 }
 # which are smaller than smallest Gemeinde? 
