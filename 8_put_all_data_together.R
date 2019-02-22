@@ -23,6 +23,8 @@ bev <- readOGR(paste0(main, "GemHe_Bevoelkerung_mh.shp"))
 corine <- raster(paste0(main, "corine.tif"))
 corineproj <- projectRaster(corine, crs=CRS("+proj=utm +zone=32 +ellps=GRS80 +units=m +no_defs"),
                             method="ngb")
+writeRaster(corineproj, "C:/Users/mleza/Documents/Jobs/BioMan/BioMan_final_product/corine_proj.tif", 
+            format="GTiff")
 
 flaech <- readOGR(paste0(main, "GemHe_Flaechennutzung_mh.shp"))
 lws <- readOGR(paste0(main, "GemHe_LWS_mh.shp"))
